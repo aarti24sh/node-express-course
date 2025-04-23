@@ -1,0 +1,27 @@
+In this lesson, you created a middleware function called asyncWrapper. Why?
+
+Answer : We wrote the async wrapper to call the next function in its catch block. This allows us to get rid of the unnecessary try catch block in each of the request
+and call it via the asyncWrapper. This is in line with the DRY principle.
+
+Suppose that you want to make sure that both a status code and an error message are sent back to the user when they request the URL for a task that does not exist. Assume that you’ve created a CustomAPIError class and an error handler that references that class. Complete the code:
+const getTask = asyncWrapper(async (req, res, next) => {  
+  const { id: taskID } = req.params;  
+  const task = await Task.findOne({ _id: taskID });  
+  if (!task) {  
+    // your code here  
+  }  
+  res.status(200).json({ task });  
+});
+
+Answer : 
+
+const getTask = asyncWrapper(async (req, res, next) => {  
+  const { id: taskID } = req.params;  
+  const task = await Task.findOne({ _id: taskID });  
+  if (!task) {  
+    return next(new CustomAPIError(`No task with id: ${taskID}`, 404));  
+  }  
+  res.status(200).json({ task });  
+});
+
+
